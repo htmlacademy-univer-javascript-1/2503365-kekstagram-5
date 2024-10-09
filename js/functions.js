@@ -1,30 +1,31 @@
 function stringCheck(text, length) {
   return text.length <= length;
 }
-console.log(stringCheck('аааа', 5));
-console.log(stringCheck('аааа', 2));
+stringCheck('аааа', 5);
+stringCheck('аааа', 2);
 
 
 // палиндром функция
 function isPalindrom(word) {
+  word = word.toLowerCase().replace(/\s+/g, '');
   return word === word.split('').reverse().join('');
 }
-console.log(isPalindrom('топот'));
-console.log(isPalindrom('барабан'));
+isPalindrom('топот');
+isPalindrom('барабан');
+isPalindrom('А роза упала на лапу Азора');
 
 // числовая функция
-
 function takeInteger(text) {
-  let massive = text.split('');  // Разбиваем строку на массив символов
-  let result = '';  // Переменная для хранения результата
+  let massive = text.split('');
+  let result = '';
 
   for (let i = 0; i < massive.length; i++) {
-    if (!isNaN(massive[i]) && massive[i] !== ' ') {  // Проверяем, является ли символ числом и не является пробелом
-      result += massive[i];  // Добавляем цифру к результату
+    if (!isNaN(massive[i]) && massive[i] !== ' ') {
+      result += massive[i];
     }
   }
 
-  return Number(result);  // Преобразуем строку чисел в число
+  return Number(result);
 }
 
-console.log(takeInteger('привет 1233'));  // Теперь вернёт 1233
+takeInteger('привет 1233');

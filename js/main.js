@@ -1,23 +1,35 @@
-let calculateSalary = function (valueBad) {
-  if (valueBad < 100000) {
-    let nalog = valueBad * 0.35;
-    return Math.round(valueBad - nalog);
-  } else {
-    let nalog = valueBad * 0.45;
-    return Math.round(valueBad - nalog);
+let materialPrice = {
+  'wood': 1000,
+  'stone': 1500,
+  'brick': 2000
+};
+
+let house = {
+  rooms: 10,
+  floors: 5,
+  material: 'wood',
+  coefficient: 10.5,
+
+  calculateSquare: function () {
+    return house.rooms * house.coefficient * house.floors;
+  },
+
+  calculatePrice: function () {
+    let defineMaterial = materialPrice[this.material]
+    return this.calculateSquare() * defineMaterial;
   }
 };
 
-calculateSalary();
-
-
-
 /* Техническое задание
 
-Мяу! Мне нужна программа, которая от «грязной» зарплаты (зарплата до вычета налогов) посчитает примерную «чистую» зарплату (которая выдаётся на лапы).
+Мяу! Допиши за меня конфигуратор. Я создал объект house и задал ему несколько свойств: rooms (количество комнат), floors (этажи), material (материал для стен), coefficient (средняя площадь каждой комнаты).
 
-Оформи программу в виде функции calculateSalary c одним параметром — величиной грязной зарплаты. Функция должна возвращать чистую зарплату.
+Ещё я завёл мапу materialPrice, в которой записал стоимость каждого возможного материала для строительства.
 
-Большая точность мне не нужна, просто считаем, что 35% величины грязной зарплаты составляют налоги, а если грязная зарплата больше или равна 100 тысячам, то налоги составляют уже 45%.
+Добавь в объект два метода: calculateSquare, который будет возвращать площадь дома, и calculatePrice, который будет возвращать стоимость строительства.
+
+Площадь считай так: умножь количество комнат на коэффициент и число этажей в доме.
+
+Цена строительства — произведение площади и стоимости материала дома.
 
 */
