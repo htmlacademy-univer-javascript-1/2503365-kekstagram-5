@@ -1,35 +1,50 @@
-let materialPrice = {
-  'wood': 1000,
-  'stone': 1500,
-  'brick': 2000
-};
+function getRandomElement(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
-let house = {
-  rooms: 10,
-  floors: 5,
-  material: 'wood',
-  coefficient: 10.5,
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-  calculateSquare: function () {
-    return house.rooms * house.coefficient * house.floors;
-  },
+function generateComments(count) {
+  const comments = [];
+  const messages = [
+    'Всё отлично!',
+    'В целом всё неплохо. Но не всё.',
+    'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
+    'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
+    'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
+    'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+  ];
+  const names = ['Артём', 'Мария', 'Дмитрий', 'Алексей', 'Ольга', 'Наталья', 'Иван', 'Сергей', 'Екатерина'];
 
-  calculatePrice: function () {
-    let defineMaterial = materialPrice[this.material]
-    return this.calculateSquare() * defineMaterial;
+  for (let i = 0; i < count; i++) {
+    const comment = {
+      id: getRandomInt(100, 999),
+      avatar: `img/avatar-${getRandomInt(1, 6)}.svg`,
+      message: getRandomElement(messages),
+      name: getRandomElement(names)
+    };
+    comments.push(comment);
   }
-};
 
-/* Техническое задание
+  return comments;
+}
 
-Мяу! Допиши за меня конфигуратор. Я создал объект house и задал ему несколько свойств: rooms (количество комнат), floors (этажи), material (материал для стен), coefficient (средняя площадь каждой комнаты).
+function generatePhotos() {
+  const photos = [];
 
-Ещё я завёл мапу materialPrice, в которой записал стоимость каждого возможного материала для строительства.
+  for (let i = 1; i <= 25; i++) {
+    const photo = {
+      id: i,
+      url: `photos/${i}.jpg`,
+      description: `Описание фотографии номер ${i}`,
+      likes: getRandomInt(15, 200),
+      comments: generateComments(getRandomInt(0, 30))
+    };
+    photos.push(photo);
+  }
+  return photos;
+}
 
-Добавь в объект два метода: calculateSquare, который будет возвращать площадь дома, и calculatePrice, который будет возвращать стоимость строительства.
-
-Площадь считай так: умножь количество комнат на коэффициент и число этажей в доме.
-
-Цена строительства — произведение площади и стоимости материала дома.
-
-*/
+generatePhotos();
