@@ -20,17 +20,26 @@ function createThumbnail(photoData) {
   return thumbnail;
 }
 
-function renderThumbnails(photos) {
-  const container = document.querySelector('.pictures'); // Контейнер для миниатюр
-  const template = document.querySelector('#picture').content.querySelector('.picture'); // Шаблон миниатюры
+function renderThumbnails(photoArray) {
+  const thumbnailContainer = document.querySelector('.pictures');
+  const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-  photos.forEach((photo) => {
-    const photoElement = template.cloneNode(true);
-    photoElement.querySelector('.picture__img').src = photo.url;
-    photoElement.querySelector('.picture__likes').textContent = photo.likes;
-    photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
-    container.appendChild(photoElement);
+  photoArray.forEach((photo) => {
+    const thumbnailElement = createThumbnail(photo);
+    thumbnailElement.querySelector('.picture__img').src = photo.url;
+    thumbnailElement.querySelector('.picture__likes').textContent = photo.likes;
+    thumbnailElement.querySelector('.picture__comments').textContent = photo.comments.length;
+
+    // Применяем эффект к миниатюре
+    if (photo.effect && photo.effect !== 'none') {
+      thumbnailElement.querySelector('.picture__img').classList.add(`effects__preview--${photo.effect}`);
+    }
+
+    thumbnailContainer.appendChild(thumbnailElement);
   });
 }
 
+
 export { renderThumbnails };
+
+
