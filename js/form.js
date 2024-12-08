@@ -104,22 +104,40 @@ noUiSlider.create(effectLevelSlider, {
     min: 0,
     max: 100,
   },
-  start: 100,
+  start: 0,
   step: 1,
   connect: 'lower',
 });
 
 // Применение эффекта к изображению
 
-function applyEffect(effect) {
+function applyEffect(effect, value) {
   const imageElement = document.querySelector('.img-upload__preview img');
-  currentEffect = effect; // Сохраняем активный эффект
-  imageElement.className = ''; // Удаляем предыдущий класс эффекта
+  imageElement.className = ''; // Сбрасываем предыдущий класс эффекта
+  previewImage.style.filter = ''; // Сбрасываем фильтр
+
   if (effect !== 'none') {
-    imageElement.classList.add(`effects__preview--${effect}`); // Применяем новый класс эффекта
+    imageElement.classList.add(`effects__preview--${effect}`);
+    const filterValue = value / 100; // Пример нормализации значения слайдера
+    switch (effect) {
+      case 'chrome':
+        previewImage.style.filter = `grayscale(${filterValue})`;
+        break;
+      case 'sepia':
+        previewImage.style.filter = `sepia(${filterValue})`;
+        break;
+      case 'marvin':
+        previewImage.style.filter = `invert(${filterValue * 100}%)`;
+        break;
+      case 'phobos':
+        previewImage.style.filter = `blur(${filterValue * 3}px)`;
+        break;
+      case 'heat':
+        previewImage.style.filter = `brightness(${1 + filterValue * 2})`;
+        break;
+    }
   }
 }
-
 
 // Обновление слайдера при переключении фильтра
 function updateSlider(effect) {
@@ -131,20 +149,22 @@ function updateSlider(effect) {
     effectLevelSlider.classList.remove('hidden');
     effectLevelSlider.noUiSlider.updateOptions({
       range: { min: 0, max: 100 },
-      start: 100,
+      start: 0, // Сброс значения слайдера в 0
     });
-    effectLevelValue.value = 100; // Устанавливаем начальное значение
+    effectLevelValue.value = 0; // Устанавливаем начальное значение
   }
 }
+
 
 // Обработчик переключения фильтров
 effectRadios.forEach((radio) => {
   radio.addEventListener('change', (evt) => {
     currentEffect = evt.target.value;
-    updateSlider(currentEffect);
+    updateSlider(currentEffect); // Сбрасываем слайдер в 0 при смене эффекта
     applyEffect(currentEffect, effectLevelSlider.noUiSlider.get());
   });
 });
+
 
 // Обновление эффекта при движении слайдера
 effectLevelSlider.noUiSlider.on('update', (values) => {
