@@ -38,7 +38,6 @@ function renderComments() {
     commentsLoader.classList.add('hidden');
   }
 }
-
 function openBigPicture(photoData) {
   // Данные фотографии
   imageElement.src = photoData.url;
@@ -49,6 +48,14 @@ function openBigPicture(photoData) {
 
   // Очистка старых комментариев
   socialComments.innerHTML = '';
+
+  // Сброс всех предыдущих эффектов
+  imageElement.className = '';
+
+  // Применение эффекта, если он есть
+  if (photoData.effect && photoData.effect !== 'none') {
+    imageElement.classList.add(`effects__preview--${photoData.effect}`);
+  }
 
   // Инициализация комментариев
   currentComments = photoData.comments;
@@ -77,6 +84,7 @@ function openBigPicture(photoData) {
   closeButton.addEventListener('click', closeBigPicture);
   document.addEventListener('keydown', onEscapePress);
 }
+
 
 
 function closeBigPicture() {
