@@ -20,13 +20,17 @@ function createThumbnail(photoData) {
   return thumbnail;
 }
 
-function renderThumbnails(data) {
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < data.length; i++) {
-    const thumbnail = createThumbnail(data[i]);
-    fragment.appendChild(thumbnail);
-  }
-  picturesContainer.appendChild(fragment);
+function renderThumbnails(photos) {
+  const container = document.querySelector('.pictures'); // Контейнер для миниатюр
+  const template = document.querySelector('#picture').content.querySelector('.picture'); // Шаблон миниатюры
+
+  photos.forEach((photo) => {
+    const photoElement = template.cloneNode(true);
+    photoElement.querySelector('.picture__img').src = photo.url;
+    photoElement.querySelector('.picture__likes').textContent = photo.likes;
+    photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
+    container.appendChild(photoElement);
+  });
 }
 
 export { renderThumbnails };
