@@ -77,7 +77,6 @@ fileInput.addEventListener('change', () => {
   }
 });
 
-
 // --------- Функция для применения масштаба ---------
 
 export function applyScale(scale) {
@@ -189,7 +188,6 @@ export function resetForm() {
   currentEffect = 'none'; // Устанавливаем эффект в 'оригинал'
   updateSlider(currentEffect); // Сбрасываем слайдер
 }
-
 
 // Закрытие формы по Esc
 document.addEventListener('keydown', (evt) => {
