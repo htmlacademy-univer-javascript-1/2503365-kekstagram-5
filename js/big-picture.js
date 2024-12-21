@@ -85,8 +85,6 @@ function openBigPicture(photoData) {
   document.addEventListener('keydown', onEscapePress);
 }
 
-
-
 function closeBigPicture() {
   bigPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');

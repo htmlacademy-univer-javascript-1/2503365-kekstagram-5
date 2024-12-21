@@ -1,7 +1,6 @@
 import { openBigPicture } from './big-picture.js';
 
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const picturesContainer = document.querySelector('.pictures');
 
 function createThumbnail(photoData) {
   const thumbnail = thumbnailTemplate.cloneNode(true);
@@ -13,7 +12,7 @@ function createThumbnail(photoData) {
   thumbnail.querySelector('.picture__comments').textContent = photoData.comments.length;
 
   // Открытие полноразмерного изображения при клике
-  thumbnail.addEventListener('click', function () {
+  thumbnail.addEventListener('click', () => {
     openBigPicture(photoData); // Открываем большое изображение
   });
 
@@ -22,7 +21,6 @@ function createThumbnail(photoData) {
 
 function renderThumbnails(photoArray) {
   const thumbnailContainer = document.querySelector('.pictures');
-  const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
   photoArray.forEach((photo) => {
     const thumbnailElement = createThumbnail(photo);

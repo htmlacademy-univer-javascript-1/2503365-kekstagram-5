@@ -1,7 +1,6 @@
-import { generatePhotos } from './data.js';
+import { photos } from './photos.js';
 import { renderThumbnails } from './thumbnails.js';
 import './form.js';
+import './form-api.js';
 
-
-export const photos = generatePhotos(); // Экспорт массива
 renderThumbnails(photos); // Отрисовка миниатюр
