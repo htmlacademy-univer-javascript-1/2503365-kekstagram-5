@@ -41,6 +41,7 @@ pristine.addValidator(
   'Хэш-теги должны начинаться с #, быть не длиннее 20 символов и без повторений. Максимум 5 хэш-тегов.'
 );
 
+// Валидация комментария
 function validateDescription(value) {
   return value.length <= 140;
 }
@@ -56,13 +57,13 @@ fileInput.addEventListener('change', () => {
   const file = fileInput.files[0];
   if (file) {
     const imageUrl = URL.createObjectURL(file);
-    previewImage.src = imageUrl; // Устанавливаем путь для previewImage
-    uploadOverlay.classList.remove('hidden'); // Показываем форму
+    previewImage.src = imageUrl;
+    uploadOverlay.classList.remove('hidden');
     document.body.classList.add('modal-open');
 
     // Установка начального состояния
     currentEffect = 'none';
-    updateSlider(currentEffect); // Сбрасываем слайдер в состояние для "оригинал"
+    updateSlider(currentEffect);
     effectLevelValue.value = '';
     previewImage.style.filter = '';
     pristine.reset();
@@ -73,9 +74,9 @@ fileInput.addEventListener('change', () => {
 // --------- Функция для применения масштаба ---------
 
 export function applyScale(scale) {
-  scaleValue.value = `${scale}%`;
+  scaleValue.value = `${scale}%`; // Исправлено: корректный синтаксис
   const scaleFactor = scale / 100;
-  previewImage.style.transform = `scale(${scaleFactor})`;
+  previewImage.style.transform = `scale(${scaleFactor})`; // Исправлено: корректный синтаксис
 }
 
 
@@ -113,7 +114,7 @@ function applyEffect(effect, value) {
 
   if (effect !== 'none') {
     imageElement.classList.add(`effects__preview--${effect}`);
-    const filterValue = value / 100; // Пример нормализации значения слайдера
+    const filterValue = value / 100;
     switch (effect) {
       case 'chrome':
         previewImage.style.filter = `grayscale(${filterValue})`;
@@ -176,13 +177,13 @@ export function resetForm() {
   pristine.reset();
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  fileInput.value = ''; // Очищаем контрол загрузки файла
-  currentScale = 100; // Сбрасываем масштаб
-  applyScale(currentScale); // Применяем сброс масштаба
-  previewImage.className = ''; // Удаляем классы эффектов
-  currentEffect = 'none'; // Устанавливаем эффект в 'оригинал'
-  updateSlider(currentEffect); // Сбрасываем слайдер
-  previewImage.style.filter = ''; // Удаляем все фильтры
+  fileInput.value = '';
+  currentScale = 100;
+  applyScale(currentScale);
+  previewImage.className = '';
+  currentEffect = 'none';
+  updateSlider(currentEffect);
+  previewImage.style.filter = '';
 }
 
 // Закрытие формы по Esc
