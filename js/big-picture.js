@@ -39,17 +39,14 @@ function renderComments() {
   }
 }
 function openBigPicture(photoData) {
-  // Данные фотографии
   imageElement.src = photoData.url;
   imageElement.alt = photoData.description;
   likesCount.textContent = photoData.likes;
   commentsCount.textContent = photoData.comments.length;
   descriptionElement.textContent = photoData.description;
 
-  // Очистка старых комментариев
+  // Очистка старых комментариев и сброс всех предыдущих эффектов
   socialComments.innerHTML = '';
-
-  // Сброс всех предыдущих эффектов
   imageElement.className = '';
 
   // Применение эффекта, если он есть
@@ -61,10 +58,8 @@ function openBigPicture(photoData) {
   currentComments = photoData.comments;
   displayedCommentsCount = 0;
 
-  // Рендер первых комментариев
   renderComments();
 
-  // Логика отображения блока комментариев
   if (currentComments.length > 0) {
     commentCountBlock.classList.remove('hidden');
     if (currentComments.length > commentsPerPage) {
