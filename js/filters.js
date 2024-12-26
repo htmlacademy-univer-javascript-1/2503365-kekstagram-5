@@ -47,4 +47,3 @@ function clearThumbnails() {
   const pictures = document.querySelectorAll('.picture');
   pictures.forEach((picture) => picture.remove());
 }
-
