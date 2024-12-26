@@ -11,7 +11,6 @@ function createThumbnail(photoData) {
   thumbnail.querySelector('.picture__likes').textContent = photoData.likes;
   thumbnail.querySelector('.picture__comments').textContent = photoData.comments.length;
 
-  // Открытие полноразмерного изображения при клике
   thumbnail.addEventListener('click', () => {
     openBigPicture(photoData); // Открываем большое изображение
   });
