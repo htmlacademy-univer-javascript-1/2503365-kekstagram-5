@@ -57,26 +57,26 @@ fileInput.addEventListener('change', () => {
   const file = fileInput.files[0];
   if (file) {
     const imageUrl = URL.createObjectURL(file); // Создаём временный URL для изображения
-    previewImage.src = imageUrl; // Устанавливаем путь для previewImage
-    uploadOverlay.classList.remove('hidden'); // Показываем форму
-    document.body.classList.add('modal-open'); // Добавляем класс modal-open
+    previewImage.src = imageUrl;
+    uploadOverlay.classList.remove('hidden');
+    document.body.classList.add('modal-open');
 
     // Установка начального состояния
     currentEffect = 'none';
-    updateSlider(currentEffect); // Сбрасываем слайдер в состояние для "оригинал"
-    effectLevelValue.value = ''; // Очищаем значение эффекта
-    previewImage.style.filter = ''; // Сбрасываем фильтры
-    pristine.reset(); // Сбрасываем ошибки валидации
-    applyScale(currentScale); // Применяем начальный масштаб
+    updateSlider(currentEffect);
+    effectLevelValue.value = '';
+    previewImage.style.filter = '';
+    pristine.reset();
+    applyScale(currentScale);
   }
 });
 
 // --------- Функция для применения масштаба ---------
 
 export function applyScale(scale) {
-  scaleValue.value = `${scale}%`; // Исправлено: корректный синтаксис
+  scaleValue.value = `${scale}%`;
   const scaleFactor = scale / 100;
-  previewImage.style.transform = `scale(${scaleFactor})`; // Исправлено: корректный синтаксис
+  previewImage.style.transform = `scale(${scaleFactor})`;
 }
 
 
@@ -113,23 +113,23 @@ function applyEffect(effect, value) {
   previewImage.style.filter = ''; // Сбрасываем фильтр
 
   if (effect !== 'none') {
-    imageElement.classList.add(`effects__preview--${effect}`); // Исправлено: использование шаблонной строки
-    const filterValue = value / 100; // Пример нормализации значения слайдера
+    imageElement.classList.add(`effects__preview--${effect}`);
+    const filterValue = value / 100;
     switch (effect) {
       case 'chrome':
-        previewImage.style.filter = `grayscale(${filterValue})`; // Исправлено
+        previewImage.style.filter = `grayscale(${filterValue})`;
         break;
       case 'sepia':
-        previewImage.style.filter = `sepia(${filterValue})`; // Исправлено
+        previewImage.style.filter = `sepia(${filterValue})`;
         break;
       case 'marvin':
-        previewImage.style.filter = `invert(${filterValue * 100}%)`; // Исправлено
+        previewImage.style.filter = `invert(${filterValue * 100}%)`;
         break;
       case 'phobos':
-        previewImage.style.filter = `blur(${filterValue * 3}px)`; // Исправлено
+        previewImage.style.filter = `blur(${filterValue * 3}px)`;
         break;
       case 'heat':
-        previewImage.style.filter = `brightness(${1 + filterValue * 2})`; // Исправлено
+        previewImage.style.filter = `brightness(${1 + filterValue * 2})`;
         break;
     }
   }
@@ -178,10 +178,10 @@ export function resetForm() {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   fileInput.value = ''; // Очищаем контрол загрузки файла
-  currentScale = 100; // Сбрасываем масштаб
-  applyScale(currentScale); // Применяем сброс масштаба
-  previewImage.className = ''; // Удаляем классы эффектов
-  currentEffect = 'none'; // Устанавливаем эффект в 'оригинал'
+  currentScale = 100;
+  applyScale(currentScale);
+  previewImage.className = '';
+  currentEffect = 'none';
   updateSlider(currentEffect); // Сбрасываем слайдер
   previewImage.style.filter = ''; // Удаляем все фильтры
 }
