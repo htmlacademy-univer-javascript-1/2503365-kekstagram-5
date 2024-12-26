@@ -21,22 +21,32 @@ function applyFilter(photos, filter) {
 }
 
 export function initFilters(photos, renderThumbnails) {
+  if (!photos || photos.length === 0) {
+    return;
+  }
+
+  // Делаем блок фильтров видимым
   photoFilters.classList.remove('img-filters--inactive');
+  photoFilters.style.display = 'block';
 
   filterButtons.forEach((button) => {
     button.addEventListener(
       'click',
       debounce((evt) => {
+        const target = evt.target;
+
         // Удаляем класс активности у всех кнопок
-        filterButtons.forEach((btn) => btn.classList.remove('img-filters__button--active'));
+        filterButtons.forEach((btn) =>
+          btn.classList.remove('img-filters__button--active')
+        );
 
         // Добавляем класс активности нажатой кнопке
-        evt.target.classList.add('img-filters__button--active');
+        target.classList.add('img-filters__button--active');
 
         clearThumbnails();
 
-        // Применяем выбранный фильтр и отрисовываем миниатюры
-        const filteredPhotos = applyFilter(photos, evt.target.id);
+        // Применяем фильтр и отрисовываем миниатюры
+        const filteredPhotos = applyFilter(photos, target.id);
         renderThumbnails(filteredPhotos);
       }, 500)
     );
@@ -45,5 +55,7 @@ export function initFilters(photos, renderThumbnails) {
 
 function clearThumbnails() {
   const pictures = document.querySelectorAll('.picture');
-  pictures.forEach((picture) => picture.remove());
+  if (pictures) {
+    pictures.forEach((picture) => picture.remove());
+  }
 }

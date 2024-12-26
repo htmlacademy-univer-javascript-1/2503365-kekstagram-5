@@ -13,7 +13,7 @@ const effectRadios = document.querySelectorAll('input[name="effect"]');
 const effectLevelSlider = document.querySelector('.effect-level__slider');
 const effectLevelValue = document.querySelector('.effect-level__value');
 
-// Инициализация Pristine
+// Pristine
 export const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__form',
   errorTextParent: 'img-upload__form',
@@ -41,7 +41,6 @@ pristine.addValidator(
   'Хэш-теги должны начинаться с #, быть не длиннее 20 символов и без повторений. Максимум 5 хэш-тегов.'
 );
 
-// Валидация комментария
 function validateDescription(value) {
   return value.length <= 140;
 }
@@ -52,31 +51,31 @@ pristine.addValidator(
   'Комментарий не должен превышать 140 символов.'
 );
 
-const previewImage = uploadOverlay.querySelector('.img-upload__preview img'); // Пример выбора превью
+const previewImage = uploadOverlay.querySelector('.img-upload__preview img');
 fileInput.addEventListener('change', () => {
   const file = fileInput.files[0];
   if (file) {
-    const imageUrl = URL.createObjectURL(file); // Создаём временный URL для изображения
+    const imageUrl = URL.createObjectURL(file);
     previewImage.src = imageUrl; // Устанавливаем путь для previewImage
     uploadOverlay.classList.remove('hidden'); // Показываем форму
-    document.body.classList.add('modal-open'); // Добавляем класс modal-open
+    document.body.classList.add('modal-open');
 
     // Установка начального состояния
     currentEffect = 'none';
     updateSlider(currentEffect); // Сбрасываем слайдер в состояние для "оригинал"
-    effectLevelValue.value = ''; // Очищаем значение эффекта
-    previewImage.style.filter = ''; // Сбрасываем фильтры
-    pristine.reset(); // Сбрасываем ошибки валидации
-    applyScale(currentScale); // Применяем начальный масштаб
+    effectLevelValue.value = '';
+    previewImage.style.filter = '';
+    pristine.reset();
+    applyScale(currentScale);
   }
 });
 
 // --------- Функция для применения масштаба ---------
 
 export function applyScale(scale) {
-  scaleValue.value = `${scale}%`; // Исправлено: корректный синтаксис
+  scaleValue.value = `${scale}%`;
   const scaleFactor = scale / 100;
-  previewImage.style.transform = `scale(${scaleFactor})`; // Исправлено: корректный синтаксис
+  previewImage.style.transform = `scale(${scaleFactor})`;
 }
 
 
@@ -113,23 +112,23 @@ function applyEffect(effect, value) {
   previewImage.style.filter = ''; // Сбрасываем фильтр
 
   if (effect !== 'none') {
-    imageElement.classList.add(`effects__preview--${effect}`); // Исправлено: использование шаблонной строки
+    imageElement.classList.add(`effects__preview--${effect}`);
     const filterValue = value / 100; // Пример нормализации значения слайдера
     switch (effect) {
       case 'chrome':
-        previewImage.style.filter = `grayscale(${filterValue})`; // Исправлено
+        previewImage.style.filter = `grayscale(${filterValue})`;
         break;
       case 'sepia':
-        previewImage.style.filter = `sepia(${filterValue})`; // Исправлено
+        previewImage.style.filter = `sepia(${filterValue})`;
         break;
       case 'marvin':
-        previewImage.style.filter = `invert(${filterValue * 100}%)`; // Исправлено
+        previewImage.style.filter = `invert(${filterValue * 100}%)`;
         break;
       case 'phobos':
-        previewImage.style.filter = `blur(${filterValue * 3}px)`; // Исправлено
+        previewImage.style.filter = `blur(${filterValue * 3}px)`;
         break;
       case 'heat':
-        previewImage.style.filter = `brightness(${1 + filterValue * 2})`; // Исправлено
+        previewImage.style.filter = `brightness(${1 + filterValue * 2})`;
         break;
     }
   }
