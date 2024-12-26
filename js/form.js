@@ -13,7 +13,7 @@ const effectRadios = document.querySelectorAll('input[name="effect"]');
 const effectLevelSlider = document.querySelector('.effect-level__slider');
 const effectLevelValue = document.querySelector('.effect-level__value');
 
-// Инициализация Pristine
+// Pristine
 export const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__form',
   errorTextParent: 'img-upload__form',
@@ -52,22 +52,22 @@ pristine.addValidator(
   'Комментарий не должен превышать 140 символов.'
 );
 
-const previewImage = uploadOverlay.querySelector('.img-upload__preview img'); // Пример выбора превью
+const previewImage = uploadOverlay.querySelector('.img-upload__preview img');
 fileInput.addEventListener('change', () => {
   const file = fileInput.files[0];
   if (file) {
-    const imageUrl = URL.createObjectURL(file); // Создаём временный URL для изображения
-    previewImage.src = imageUrl; // Устанавливаем путь для previewImage
-    uploadOverlay.classList.remove('hidden'); // Показываем форму
-    document.body.classList.add('modal-open'); // Добавляем класс modal-open
+    const imageUrl = URL.createObjectURL(file);
+    previewImage.src = imageUrl;
+    uploadOverlay.classList.remove('hidden');
+    document.body.classList.add('modal-open');
 
     // Установка начального состояния
     currentEffect = 'none';
-    updateSlider(currentEffect); // Сбрасываем слайдер в состояние для "оригинал"
-    effectLevelValue.value = ''; // Очищаем значение эффекта
-    previewImage.style.filter = ''; // Сбрасываем фильтры
-    pristine.reset(); // Сбрасываем ошибки валидации
-    applyScale(currentScale); // Применяем начальный масштаб
+    updateSlider(currentEffect);
+    effectLevelValue.value = '';
+    previewImage.style.filter = '';
+    pristine.reset();
+    applyScale(currentScale);
   }
 });
 
@@ -113,23 +113,23 @@ function applyEffect(effect, value) {
   previewImage.style.filter = ''; // Сбрасываем фильтр
 
   if (effect !== 'none') {
-    imageElement.classList.add(`effects__preview--${effect}`); // Исправлено: использование шаблонной строки
-    const filterValue = value / 100; // Пример нормализации значения слайдера
+    imageElement.classList.add(`effects__preview--${effect}`);
+    const filterValue = value / 100;
     switch (effect) {
       case 'chrome':
-        previewImage.style.filter = `grayscale(${filterValue})`; // Исправлено
+        previewImage.style.filter = `grayscale(${filterValue})`;
         break;
       case 'sepia':
-        previewImage.style.filter = `sepia(${filterValue})`; // Исправлено
+        previewImage.style.filter = `sepia(${filterValue})`;
         break;
       case 'marvin':
-        previewImage.style.filter = `invert(${filterValue * 100}%)`; // Исправлено
+        previewImage.style.filter = `invert(${filterValue * 100}%)`;
         break;
       case 'phobos':
-        previewImage.style.filter = `blur(${filterValue * 3}px)`; // Исправлено
+        previewImage.style.filter = `blur(${filterValue * 3}px)`;
         break;
       case 'heat':
-        previewImage.style.filter = `brightness(${1 + filterValue * 2})`; // Исправлено
+        previewImage.style.filter = `brightness(${1 + filterValue * 2})`;
         break;
     }
   }
@@ -177,13 +177,13 @@ export function resetForm() {
   pristine.reset();
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  fileInput.value = ''; // Очищаем контрол загрузки файла
-  currentScale = 100; // Сбрасываем масштаб
-  applyScale(currentScale); // Применяем сброс масштаба
-  previewImage.className = ''; // Удаляем классы эффектов
-  currentEffect = 'none'; // Устанавливаем эффект в 'оригинал'
-  updateSlider(currentEffect); // Сбрасываем слайдер
-  previewImage.style.filter = ''; // Удаляем все фильтры
+  fileInput.value = '';
+  currentScale = 100;
+  applyScale(currentScale);
+  previewImage.className = '';
+  currentEffect = 'none';
+  updateSlider(currentEffect);
+  previewImage.style.filter = '';
 }
 
 // Закрытие формы по Esc
