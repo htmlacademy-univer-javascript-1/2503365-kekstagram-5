@@ -23,25 +23,33 @@ function applyFilter(photos, filter) {
 export function initFilters(photos, renderThumbnails) {
   photoFilters.classList.remove('img-filters--inactive');
 
+  let selectedFilter = null;
+
+  const applyDebouncedFilter = debounce(() => {
+    if (selectedFilter) {
+      clearThumbnails();
+      const filteredPhotos = applyFilter(photos, selectedFilter);
+      renderThumbnails(filteredPhotos);
+    }
+  }, 500);
+
   filterButtons.forEach((button) => {
-    button.addEventListener(
-      'click',
-      debounce((evt) => {
-        // Удаляем класс активности у всех кнопок
-        filterButtons.forEach((btn) => btn.classList.remove('img-filters__button--active'));
+    button.addEventListener('click', (evt) => {
+      // Удаляем класс активности у всех кнопок
+      filterButtons.forEach((btn) => btn.classList.remove('img-filters__button--active'));
 
-        // Добавляем класс активности нажатой кнопке
-        evt.target.classList.add('img-filters__button--active');
+      // Устанавливаем класс активности для текущей кнопки
+      evt.target.classList.add('img-filters__button--active');
 
-        clearThumbnails();
+      // Сохраняем выбранный фильтр
+      selectedFilter = evt.target.id;
 
-        // Применяем выбранный фильтр и отрисовываем миниатюры
-        const filteredPhotos = applyFilter(photos, evt.target.id);
-        renderThumbnails(filteredPhotos);
-      }, 500)
-    );
+      // Запускаем отложенное применение фильтра
+      applyDebouncedFilter();
+    });
   });
 }
+
 
 function clearThumbnails() {
   const pictures = document.querySelectorAll('.picture');

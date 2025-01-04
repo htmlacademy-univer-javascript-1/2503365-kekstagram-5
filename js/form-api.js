@@ -1,9 +1,6 @@
-/* Импорт для функционала с загрузкой картинок. Решил не убирать раз создал, но закомментил
 import { photos } from './photos.js';
-import { renderThumbnails } from './thumbnails.js';
+// import { renderThumbnails } from './thumbnails.js';
 import { pristine, currentEffect, resetForm } from './form.js';
-*/
-import { pristine, resetForm } from './form.js';
 
 export const uploadForm = document.querySelector('.img-upload__form');
 export const fileInput = uploadForm.querySelector('.img-upload__input');
@@ -27,7 +24,6 @@ uploadForm.addEventListener('submit', (evt) => {
     })
       .then((response) => {
         if (response.ok) {
-          /*
           // Добавляем новую фотографию с эффектом
           const newPhoto = {
             id: photos.length + 1,
@@ -37,10 +33,9 @@ uploadForm.addEventListener('submit', (evt) => {
             comments: [],
             effect: currentEffect // Сохраняем текущий эффект
           };
-
           photos.push(newPhoto); // Добавляем фото в массив
-          renderThumbnails([newPhoto]); // Добавляем миниатюру
-          */
+          // renderThumbnails([newPhoto]); // Добавляем миниатюру
+
           showSuccessMessage(); // Показ успешного сообщения
           resetForm();
         } else {
@@ -68,19 +63,25 @@ function showSuccessMessage() {
 
   function closeSuccess() {
     successOverlay.remove();
+    document.removeEventListener('keydown', onKeydownSuccess);
+    document.removeEventListener('click', onClickOutsideSuccess);
   }
 
-  closeButton.addEventListener('click', closeSuccess);
-  document.addEventListener('keydown', (evt) => {
+  function onKeydownSuccess(evt) {
     if (evt.key === 'Escape') {
       closeSuccess();
     }
-  });
-  document.addEventListener('click', (evt) => {
+  }
+
+  function onClickOutsideSuccess(evt) {
     if (evt.target === successOverlay) {
       closeSuccess();
     }
-  });
+  }
+
+  closeButton.addEventListener('click', closeSuccess);
+  document.addEventListener('keydown', onKeydownSuccess);
+  document.addEventListener('click', onClickOutsideSuccess);
 }
 
 function showErrorMessage() {
@@ -93,17 +94,23 @@ function showErrorMessage() {
 
   function closeError() {
     errorOverlay.remove();
+    document.removeEventListener('keydown', onKeydownError);
+    document.removeEventListener('click', onClickOutsideError);
   }
 
-  closeButton.addEventListener('click', closeError);
-  document.addEventListener('keydown', (evt) => {
+  function onKeydownError(evt) {
     if (evt.key === 'Escape') {
       closeError();
     }
-  });
-  document.addEventListener('click', (evt) => {
+  }
+
+  function onClickOutsideError(evt) {
     if (evt.target === errorOverlay) {
       closeError();
     }
-  });
+  }
+
+  closeButton.addEventListener('click', closeError);
+  document.addEventListener('keydown', onKeydownError);
+  document.addEventListener('click', onClickOutsideError);
 }
