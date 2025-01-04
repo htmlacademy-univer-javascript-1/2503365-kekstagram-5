@@ -7,11 +7,10 @@ export function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function debounce(callback, delay) {
-  let timeout;
-  return (...rest) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => callback.apply(this, rest), delay);
+export const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback(...args), timeoutDelay);
   };
-}
-
+};
