@@ -1,189 +1,135 @@
-import { uploadForm, fileInput, hashtagInput, descriptionInput } from './form-api.js';
+import { sendData } from './api.js';
+import { FormErrors, validateDescriptionLength, validateHashtagCount, validateHashtags, validateUniqueHashtags } from './validation.js';
+import { updateEffect, onEffectChange, resetEffects } from './effects.js';
+import { onScaleControlSmallerClick, onScaleControlBiggerClick, resetScale } from './scale.js';
+import { showSuccessMessage, showErrorMessage, hideMessage, onDocumentKeydown } from './messages.js';
 
-const uploadOverlay = document.querySelector('.img-upload__overlay'); // Блок формы
-const closeButton = uploadOverlay.querySelector('.img-upload__cancel'); // Крестик
-
-let currentScale = 100;
-const scaleSmaller = uploadOverlay.querySelector('.scale__control--smaller');
-const scaleBigger = uploadOverlay.querySelector('.scale__control--bigger');
-const scaleValue = uploadOverlay.querySelector('.scale__control--value');
-
-export let currentEffect = 'none';
-const effectRadios = document.querySelectorAll('input[name="effect"]');
-const effectLevelSliderContainer = document.querySelector('.effect-level'); // Контейнер слайдера
-const effectLevelSlider = document.querySelector('.effect-level__slider');
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+const form = document.querySelector('.img-upload__form');
+const fileField = form.querySelector('.img-upload__input');
+const overlay = form.querySelector('.img-upload__overlay');
+const body = document.querySelector('body');
+const hashtagsField = form.querySelector('.text__hashtags');
+const descriptionField = form.querySelector('.text__description');
+const closeButton = form.querySelector('.img-upload__cancel');
+const scaleControlSmaller = document.querySelector('.scale__control--smaller');
+const scaleControlBigger = document.querySelector('.scale__control--bigger');
+const scaleControlValue = document.querySelector('.scale__control--value');
+const imgUploadPreview = document.querySelector('.img-upload__preview img');
 const effectLevelValue = document.querySelector('.effect-level__value');
+const effectLevelSlider = document.querySelector('.effect-level__slider');
+const effectLevel = document.querySelector('.img-upload__effect-level');
+const submitButton = form.querySelector('.img-upload__submit');
+const successMessage = document.querySelector('#success').content.querySelector('.success');
+const errorMessage = document.querySelector('#error').content.querySelector('.error');
 
-// Инициализация Pristine
-export const pristine = new Pristine(uploadForm, {
-  classTo: 'img-upload__form',
-  errorTextParent: 'img-upload__form',
-  errorTextClass: 'form__error',
-}, true);
-
-// Проверка хэш-тегов
-function validateHashtags(value) {
-  if (!value) {
-    return true; // Поле не обязательное
-  }
-  const hashtags = value.trim().toLowerCase().split(/\s+/);
-  const hashtagPattern = /^#[a-zа-яё0-9]{1,19}$/;
-
-  return hashtags.length <= 5 &&
-    hashtags.every((tag) => hashtagPattern.test(tag)) &&
-    new Set(hashtags).size === hashtags.length; // Уникальность
-}
-
-pristine.addValidator(
-  hashtagInput,
-  validateHashtags,
-  'Хэш-теги должны начинаться с #, быть не длиннее 20 символов и без повторений. Максимум 5 хэштегов.'
-);
-
-// Валидация комментария
-function validateDescription(value) {
-  return value.length <= 140;
-}
-
-pristine.addValidator(
-  descriptionInput,
-  validateDescription,
-  'Комментарий не должен превышать 140 символов.'
-);
-
-const previewImage = uploadOverlay.querySelector('.img-upload__preview img');
-fileInput.addEventListener('change', () => {
-  const file = fileInput.files[0];
-  if (file) {
-    const imageUrl = URL.createObjectURL(file);
-    previewImage.src = imageUrl;
-    uploadOverlay.classList.remove('hidden');
-    document.body.classList.add('modal-open');
-
-    // Установка начального состояния
-    currentEffect = 'none';
-    updateSlider(currentEffect);
-    effectLevelValue.value = '';
-    previewImage.style.filter = '';
-    pristine.reset();
-    applyScale(currentScale);
-  }
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
 });
 
-// --------- Функция для применения масштаба ---------
-export function applyScale(scale) {
-  scaleValue.value = `${scale}%`;
-  const scaleFactor = scale / 100;
-  previewImage.style.transform = `scale(${scaleFactor})`;
-}
+const isCursorInInputField = () => document.activeElement === hashtagsField || document.activeElement === descriptionField;
 
-scaleSmaller.addEventListener('click', () => {
-  if (currentScale > 25) {
-    currentScale -= 25;
-    applyScale(currentScale);
+const formPressESCHandler = (evt) => {
+  if (evt.key === 'Escape' && !isCursorInInputField()) {
+    evt.preventDefault();
+    // eslint-disable-next-line no-use-before-define
+    closeForm();
   }
-});
+};
 
-scaleBigger.addEventListener('click', () => {
-  if (currentScale < 100) {
-    currentScale += 25;
-    applyScale(currentScale);
+const closeForm = () => {
+  form.reset();
+  pristine.reset();
+  fileField.value = '';
+  overlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown', formPressESCHandler);
+  resetScale(scaleControlValue, imgUploadPreview);
+  resetEffects(effectLevelSlider);
+  hideMessage();
+};
+
+const isValidType = (file) => {
+  const fileName = file.name.toLowerCase();
+  return FILE_TYPES.some((it) => fileName.endsWith(it));
+};
+
+const showForm = () => {
+  overlay.classList.remove('hidden');
+  body.classList.add('modal-open');
+  document.addEventListener('keydown', formPressESCHandler);
+};
+
+const formFileIsSelectedHandler = (evt) => {
+  const file = evt.target.files[0];
+  if (file && isValidType(file)) {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      imgUploadPreview.src = reader.result;
+      const effectPreviews = document.querySelectorAll('.effects__preview');
+      effectPreviews.forEach((preview) => {
+        preview.style.backgroundImage = `url(${reader.result})`;
+      });
+      showForm();
+    };
+
+    reader.readAsDataURL(file);
   }
-});
+};
 
-// --------- Слайдер и эффекты ---------
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (!isValid) {
+    return;
+  }
+  submitButton.disabled = true;
+
+  const formData = new FormData(evt.target);
+
+  sendData(formData)
+    .then(() => {
+      closeForm();
+      showSuccessMessage(successMessage);
+    })
+    .catch((error) => {
+      showErrorMessage(errorMessage, error.message);
+    })
+    .finally(() => {
+      submitButton.disabled = false;
+    });
+};
+
+fileField.addEventListener('change', formFileIsSelectedHandler);
+closeButton.addEventListener('click', closeForm);
+scaleControlSmaller.addEventListener('click', () => onScaleControlSmallerClick(scaleControlValue, imgUploadPreview));
+scaleControlBigger.addEventListener('click', () => onScaleControlBiggerClick(scaleControlValue, imgUploadPreview));
+document.addEventListener('keydown', onDocumentKeydown);
+
 noUiSlider.create(effectLevelSlider, {
   range: {
     min: 0,
-    max: 100,
+    max: 100
   },
   start: 100,
   step: 1,
-  connect: 'lower',
+  connect: 'lower'
 });
 
-effectLevelSliderContainer.style.display = 'none'; // Скрываем слайдер по умолчанию
+effectLevelSlider.noUiSlider.on('update', () => updateEffect(effectLevelSlider, imgUploadPreview, effectLevel, effectLevelValue));
+document.querySelector('.effects__list').addEventListener('change', (evt) => onEffectChange(evt, effectLevelSlider));
 
-function applyEffect(effect, value) {
-  const filterValue = value / 100;
-  switch (effect) {
-    case 'chrome':
-      previewImage.style.filter = `grayscale(${filterValue})`;
-      break;
-    case 'sepia':
-      previewImage.style.filter = `sepia(${filterValue})`;
-      break;
-    case 'marvin':
-      previewImage.style.filter = `invert(${value}%)`;
-      break;
-    case 'phobos':
-      previewImage.style.filter = `blur(${(value * 3) / 100}px)`;
-      break;
-    case 'heat':
-      previewImage.style.filter = `brightness(${1 + (filterValue * 2)})`;
-      break;
-    case 'none':
-    default:
-      previewImage.style.filter = '';
-      break;
+pristine.addValidator(descriptionField, validateDescriptionLength, FormErrors.LONG_DESCRIPTION);
+pristine.addValidator(hashtagsField, validateUniqueHashtags, FormErrors.UNIQUE_HASHTAGS);
+pristine.addValidator(hashtagsField, validateHashtags, FormErrors.INCORRECT_HASHTAG);
+pristine.addValidator(hashtagsField, validateHashtagCount, FormErrors.COUNT_EXCEEDED);
+
+form.addEventListener('submit', onFormSubmit);
+
+document.addEventListener('click', (evt) => {
+  if (evt.target.classList.contains('error__button')) {
+    hideMessage();
   }
-}
-
-// Обновление слайдера при переключении фильтра
-function updateSlider(effect) {
-  if (effect === 'none') {
-    effectLevelSliderContainer.style.display = 'none';
-    effectLevelValue.value = '';
-    previewImage.style.filter = '';
-  } else {
-    effectLevelSliderContainer.style.display = 'block';
-    effectLevelSlider.noUiSlider.updateOptions({
-      range: { min: 0, max: 100 },
-      start: 100,
-    });
-    effectLevelValue.value = 100;
-  }
-}
-
-// Обработчик переключения фильтров
-effectRadios.forEach((radio) => {
-  radio.addEventListener('change', (evt) => {
-    currentEffect = evt.target.value;
-    updateSlider(currentEffect);
-    applyEffect(currentEffect, effectLevelSlider.noUiSlider.get());
-  });
-});
-
-// Обновление эффекта при движении слайдера
-effectLevelSlider.noUiSlider.on('update', (values) => {
-  const value = Math.round(values[0]);
-  effectLevelValue.value = value;
-  applyEffect(currentEffect, value);
-});
-
-// --------- Закрытие формы ---------
-export function resetForm() {
-  uploadForm.reset();
-  pristine.reset();
-  uploadOverlay.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  fileInput.value = '';
-  currentScale = 100;
-  applyScale(currentScale);
-  previewImage.className = '';
-  currentEffect = 'none';
-  updateSlider(currentEffect);
-  previewImage.style.filter = '';
-}
-
-// Закрытие формы по Esc
-document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape' && document.activeElement !== hashtagInput && document.activeElement !== descriptionInput) {
-    resetForm();
-  }
-});
-
-// Закрытие формы по клику на крестик
-closeButton.addEventListener('click', () => {
-  resetForm();
 });
