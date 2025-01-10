@@ -5,6 +5,7 @@ import { onScaleControlSmallerClick, onScaleControlBiggerClick, resetScale } fro
 import { showSuccessMessage, showErrorMessage, hideMessage, onDocumentKeydown } from './messages.js';
 
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 const form = document.querySelector('.img-upload__form');
 const fileField = form.querySelector('.img-upload__input');
 const overlay = form.querySelector('.img-upload__overlay');
