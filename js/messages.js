@@ -1,3 +1,29 @@
+import { isEscapeKey } from './util.js';
+
+function hideMessage() {
+  const messageElement = document.querySelector('.success') || document.querySelector('.error');
+  if (messageElement) {
+    messageElement.remove();
+    document.removeEventListener('keydown', onDocumentKeydown);
+    document.querySelector('body').removeEventListener('click', onBodyCLick);
+  }
+}
+
+function onDocumentKeydown(evt) {
+  if (isEscapeKey(evt)) {
+    hideMessage();
+  }
+}
+
+function onBodyCLick(evt) {
+  if (
+    evt.target.closest('.success__inner') || evt.target.closest('.error__inner')
+  ) {
+    return;
+  }
+  hideMessage();
+}
+
 const showMessage = (messageElement, closeButtonClass) => {
   const body = document.querySelector('body');
   body.append(messageElement);
@@ -16,29 +42,5 @@ const showErrorMessage = (errorMessage, message) => {
   errorElement.querySelector('.error__button').textContent = 'Закрыть';
   showMessage(errorElement, '.error__button');
 };
-
-function onDocumentKeydown(evt) {
-  if (evt.key === 'Escape') {
-    hideMessage();
-  }
-}
-
-function hideMessage() {
-  const messageElement = document.querySelector('.success') || document.querySelector('.error');
-  if (messageElement) {
-    messageElement.remove();
-    document.removeEventListener('keydown', onDocumentKeydown);
-    document.querySelector('body').removeEventListener('click', onBodyCLick);
-  }
-}
-
-function onBodyCLick(evt) {
-  if (
-    evt.target.closest('.success__inner') || evt.target.closest('.error__inner')
-  ) {
-    return;
-  }
-  hideMessage();
-}
 
 export { showSuccessMessage, showErrorMessage, hideMessage, onDocumentKeydown };

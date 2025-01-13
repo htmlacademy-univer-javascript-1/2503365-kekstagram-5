@@ -1,4 +1,5 @@
 import { sendData } from './api.js';
+import { isEscapeKey } from './util.js';
 import { FormErrors, validateDescriptionLength, validateHashtagCount, validateHashtags, validateUniqueHashtags } from './validation.js';
 import { updateEffect, onEffectChange, resetEffects } from './effects.js';
 import { onScaleControlSmallerClick, onScaleControlBiggerClick, resetScale } from './scale.js';
@@ -9,17 +10,17 @@ const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const form = document.querySelector('.img-upload__form');
 const fileField = form.querySelector('.img-upload__input');
 const overlay = form.querySelector('.img-upload__overlay');
-const body = document.querySelector('body');
+const body = document.body;
 const hashtagsField = form.querySelector('.text__hashtags');
 const descriptionField = form.querySelector('.text__description');
 const closeButton = form.querySelector('.img-upload__cancel');
-const scaleControlSmaller = document.querySelector('.scale__control--smaller');
-const scaleControlBigger = document.querySelector('.scale__control--bigger');
-const scaleControlValue = document.querySelector('.scale__control--value');
-const imgUploadPreview = document.querySelector('.img-upload__preview img');
-const effectLevelValue = document.querySelector('.effect-level__value');
-const effectLevelSlider = document.querySelector('.effect-level__slider');
-const effectLevel = document.querySelector('.img-upload__effect-level');
+const scaleControlSmaller = form.querySelector('.scale__control--smaller');
+const scaleControlBigger = form.querySelector('.scale__control--bigger');
+const scaleControlValue = form.querySelector('.scale__control--value');
+const imgUploadPreview = form.querySelector('.img-upload__preview img');
+const effectLevelValue = form.querySelector('.effect-level__value');
+const effectLevelSlider = form.querySelector('.effect-level__slider');
+const effectLevel = form.querySelector('.img-upload__effect-level');
 const submitButton = form.querySelector('.img-upload__submit');
 const successMessage = document.querySelector('#success').content.querySelector('.success');
 const errorMessage = document.querySelector('#error').content.querySelector('.error');
@@ -32,7 +33,7 @@ const pristine = new Pristine(form, {
 const isCursorInInputField = () => document.activeElement === hashtagsField || document.activeElement === descriptionField;
 
 const formPressESCHandler = (evt) => {
-  if (evt.key === 'Escape' && !isCursorInInputField()) {
+  if (isEscapeKey(evt) && !isCursorInInputField()) {
     evt.preventDefault();
     // eslint-disable-next-line no-use-before-define
     closeForm();
