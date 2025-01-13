@@ -5,13 +5,13 @@
   "description": "Личный проект «Кекстаграм» от HTML Academy",
   "repository": {
     "type": "git",
-    "url": "git@github.com:htmlacademy-univer-javascript-1/2503365-kekstagram-5.git"
+    "url": "git@github.com:htmlacademy-univer-javascript-1/2570683-kekstagram-5.git"
   },
   "bugs": {
-    "url": "https://github.com/htmlacademy-univer-javascript-1/2503365-kekstagram-5/issues"
+    "url": "https://github.com/htmlacademy-univer-javascript-1/2570683-kekstagram-5/issues"
   },
   "devDependencies": {
-    "browser-sync": "2.29.3",
+    "browser-sync": "^3.0.3",
     "eslint": "8.42.0",
     "eslint-config-htmlacademy": "9.1.1"
   },
@@ -23,8 +23,5 @@
   "engines": {
     "node": "18",
     "npm": "9"
-  },
-  "dependencies": {
-    "pristinejs": "^1.1.0"
   }
 }

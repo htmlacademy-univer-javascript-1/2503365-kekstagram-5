@@ -1,15 +1,16 @@
+import { isEscapeKey } from './util.js';
 const COMMENTS_PER_PAGE = 5;
 
 const pictureContainer = document.querySelector('.big-picture');
-const pictureImage = document.querySelector('.big-picture__img img');
-const pictureCaption = document.querySelector('.social__caption');
-const pictureLikesCount = document.querySelector('.likes-count');
-const pictureCloseButton = document.querySelector('.big-picture__cancel');
+const pictureImage = pictureContainer.querySelector('.big-picture__img img');
+const pictureCaption = pictureContainer.querySelector('.social__caption');
+const pictureLikesCount = pictureContainer.querySelector('.likes-count');
+const pictureCloseButton = pictureContainer.querySelector('.big-picture__cancel');
 
-const commentsContainer = document.querySelector('.social__comment-count');
-const commentsCount = document.querySelector('.comments-count');
-const commentsList = document.querySelector('.social__comments');
-const commentsLoader = document.querySelector('.comments-loader');
+const commentsContainer = pictureContainer.querySelector('.social__comment-count');
+const commentsCount = pictureContainer.querySelector('.comments-count');
+const commentsList = pictureContainer.querySelector('.social__comments');
+const commentsLoader = pictureContainer.querySelector('.comments-loader');
 
 let currentComments = [];
 let commentsShown = 0;
@@ -19,7 +20,7 @@ const onCloseButtonClick = () => {
 };
 
 const onDocumentKeydown = (evt) => {
-  if (evt.key === 'Escape' && !evt.target.closest('.social__footer-text')) {
+  if (isEscapeKey(evt) && !evt.target.closest('.social__footer-text')) {
     closeBigPicture();
   }
 };

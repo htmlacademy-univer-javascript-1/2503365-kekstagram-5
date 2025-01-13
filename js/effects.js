@@ -1,40 +1,40 @@
 const EffectSetups = {
-  none: {
+  NONE: {
     filter: '',
     min: 0,
     max: 100,
     step: 1,
     unit: ''
   },
-  chrome: {
+  CHROME: {
     filter: 'grayscale',
     min: 0,
     max: 1,
     step: 0.1,
     unit: ''
   },
-  sepia: {
+  SEPIA: {
     filter: 'sepia',
     min: 0,
     max: 1,
     step: 0.1,
     unit: ''
   },
-  marvin: {
+  MARVIN: {
     filter: 'invert',
     min: 0,
     max: 100,
     step: 1,
     unit: '%'
   },
-  phobos: {
+  PHOBOS: {
     filter: 'blur',
     min: 0,
     max: 3,
     step: 0.1,
     unit: 'px'
   },
-  heat: {
+  HEAT: {
     filter: 'brightness',
     min: 1,
     max: 3,
@@ -43,11 +43,11 @@ const EffectSetups = {
   }
 };
 
-const DEFAULT_EFFECT = EffectSetups.none;
+const DEFAULT_EFFECT = EffectSetups.NONE;
 let chosenEffect = DEFAULT_EFFECT;
 
 const updateEffect = (effectLevelSlider, imgUploadPreview, effectLevel, effectLevelValue) => {
-  if (chosenEffect === EffectSetups.none) {
+  if (chosenEffect === EffectSetups.NONE) {
     imgUploadPreview.style.filter = '';
     effectLevel.classList.add('hidden');
   } else {
@@ -60,7 +60,7 @@ const updateEffect = (effectLevelSlider, imgUploadPreview, effectLevel, effectLe
 
 const onEffectChange = (evt, effectLevelSlider) => {
   if (evt.target.matches('input[type="radio"]')) {
-    chosenEffect = EffectSetups[evt.target.value];
+    chosenEffect = EffectSetups[evt.target.value.toUpperCase()];
     effectLevelSlider.noUiSlider.updateOptions({
       range: {
         min: chosenEffect.min,
